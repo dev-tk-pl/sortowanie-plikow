@@ -1,0 +1,19 @@
+{
+  "name": "sortowanie-plikow",
+  "version": "1.0.0",
+  "main": "node-file-sort.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "moment-range": "^4.0.2",
+    "win-select-folder": "^1.0.1"
+  },
+  "devDependencies": {},
+  "description": ""
+}
