@@ -59,3 +59,8 @@ function sortFileByDate(dateStart, time, fileName, dirPath) {
     console.log('next day')
   }
 }
+
+// var readlineSync = require('readline-sync');
+// console.log("welcome. Please enter your name ");
+// var username = readlineSync.question("Your Name? ");
+// console.log("Welcome to THE QUIZ, " + username + "!");
