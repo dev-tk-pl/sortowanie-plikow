@@ -1,6 +1,6 @@
 const fs = require('fs');
-
 const selectFolder = require('win-select-folder');
+
 const root = 'myComputer'; // rootfolder - default desktop
 const description = 'Wybierz folder do posortowania'; // default Select Folder
 const newFolderButton = 0; // whether or not to show the newFolderButton - default 1
@@ -23,8 +23,8 @@ const selectFolder2sort = async (dir) => {
       if (err) { console.log(err) }
       else {
         // console.log(fileName);
-        let fileDate = stats.birthtime.toISOString().slice(0, 10);
-        let fileTime = stats.birthtime.toISOString().slice(11, 19);
+        let fileDate = stats.mtime.toISOString().slice(0, 10);
+        let fileTime = stats.mtime.toISOString().slice(11, 19);
         // console.log('data : ', fileDate)
         // console.log('godz. : ', fileTime)
         // console.log(parseInt(fileTime.replace(/:/g, "")))
@@ -57,6 +57,21 @@ function sortFileByDate(dateStart, time, fileName, dirPath) {
     })
   } else {
     console.log('next day')
+    let dayBefore = new Date(dateStart);
+    dayBefore = new Date(dayBefore.setDate(dayBefore.getDate() - 1))
+    dayBefore = dayBefore.toISOString().slice(0, 10)
+
+    let dir = `${dirPath}/${dayBefore}`;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+    let oldPath = `${dirPath}/${fileName}`;
+    let newPath = `${dirPath}/${dayBefore}/${fileName}`;
+
+    fs.rename(oldPath, newPath, function (err) {
+      if (err) throw err
+      console.log('Successfully renamed - AKA moved! 00-12')
+    })
   }
 }
 
