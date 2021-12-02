@@ -6,36 +6,41 @@ const description = 'Wybierz folder do posortowania'; // default Select Folder
 const newFolderButton = 0; // whether or not to show the newFolderButton - default 1
 
 selectFolder({ root, description, newFolderButton })
-  .then(result => {
-    if (result === 'cancelled') console.log('Cancelled by user');
-    else selectFolder2sort(result); // logs selected folder
+  .then(selectFolder => {
+    if (selectFolder === 'cancelled') console.log('Cancelled by user');
+    else readFileFromPath(selectFolder); // logs selected folder
   })
   .catch(err => console.error(err))
 
-const selectFolder2sort = async (dir) => {
-  const files = await fs.promises.readdir(dir);
-  console.log(files)
-
-  files.forEach(file => showDate(file))
-
-  function showDate(fileName) {
-    fs.stat(`${dir}/${fileName}`, (err, stats) => {
-      if (err) { console.log(err) }
-      else {
-        // console.log(stats);
-        // console.log(fileName);
-        let fileDate = stats.mtime.toISOString().slice(0, 10);
-        let fileTime = stats.mtime.toISOString().slice(11, 19);
-        // console.log('data : ', fileDate)
-        // console.log('godz. : ', fileTime)
-        // console.log(parseInt(fileTime.replace(/:/g, "")))
-        sortFileByDate(fileDate, fileTime, fileName, dir)
-      }
-    })
-  }
+const readFileFromPath = async (dir) => {
+  // const files = await fs.promises.readdir(dir);
+  // console.log(files)
+  fs.readdir(dir, { withFileTypes: true }, (err, dirents) => {
+    const files = dirents
+      .filter(dirent => dirent.isFile())
+      .map(dirent => dirent.name);
+    // use files
+    files.forEach(file => getDate(file, dir))
+  });
 }
 
-function sortFileByDate(dateStart, time, fileName, dirPath) {
+function getDate(fileName, dir) {
+  fs.stat(`${dir}/${fileName}`, (err, stats) => {
+    if (err) { console.log(err) }
+    else {
+      // console.log(stats);
+      // console.log(fileName);
+      let fileDate = stats.mtime.toISOString().slice(0, 10);
+      let fileTime = stats.mtime.toISOString().slice(11, 19);
+      // console.log('data : ', fileDate)
+      // console.log('godz. : ', fileTime)
+      // console.log(parseInt(fileTime.replace(/:/g, "")))
+      sortFile2FoldersByDate(fileDate, fileTime, fileName, dir)
+    }
+  })
+}
+
+function sortFile2FoldersByDate(dateStart, time, fileName, dirPath) {
   let dateEnd = new Date(dateStart);
   dateEnd = new Date(dateEnd.setDate(dateEnd.getDate() + 1))
   dateEnd = dateEnd.toISOString().slice(0, 10)

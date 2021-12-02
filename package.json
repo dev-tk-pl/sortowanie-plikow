@@ -11,10 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
-    "node-popup": "^0.1.14",
-=======
->>>>>>> c6a6b203e4682424b29f70e03f4c2481cc3475a3
     "win-select-folder": "^1.0.1"
   },
   "devDependencies": {},
