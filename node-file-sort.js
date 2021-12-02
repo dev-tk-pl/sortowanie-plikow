@@ -22,9 +22,12 @@ const selectFolder2sort = async (dir) => {
     fs.stat(`${dir}/${fileName}`, (err, stats) => {
       if (err) { console.log(err) }
       else {
+        // console.log(stats);
         // console.log(fileName);
-        let fileDate = stats.birthtime.toISOString().slice(0, 10);
-        let fileTime = stats.birthtime.toISOString().slice(11, 19);
+        // let fileDate = stats.birthtime.toISOString().slice(0, 10);
+        // let fileTime = stats.birthtime.toISOString().slice(11, 19);
+        let fileDate = stats.mtime.toISOString().slice(0, 10);
+        let fileTime = stats.mtime.toISOString().slice(11, 19)
         // console.log('data : ', fileDate)
         // console.log('godz. : ', fileTime)
         // console.log(parseInt(fileTime.replace(/:/g, "")))
@@ -56,6 +59,20 @@ function sortFileByDate(dateStart, time, fileName, dirPath) {
       console.log('Successfully renamed - AKA moved!')
     })
   } else {
+    let dateOneDayBefore = new Date(dateStart);
+    dateOneDayBefore = new Date(dateOneDayBefore.setDate(dateOneDayBefore.getDate() - 1))
+    dateOneDayBefore = dateOneDayBefore.toISOString().slice(0, 10)
     console.log('next day')
+    let dir = `${dirPath}/${dateOneDayBefore}`;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+    let oldPath = `${dirPath}/${fileName}`
+    let newPath = `${dirPath}/${dateOneDayBefore}/${fileName}`
+
+    fs.rename(oldPath, newPath, function (err) {
+      if (err) throw err
+      console.log('Successfully renamed - AKA moved ! (00:00-12:00)')
+    })
   }
 }
